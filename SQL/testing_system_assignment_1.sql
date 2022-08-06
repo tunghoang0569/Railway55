@@ -1,78 +1,105 @@
-CREATE DATABASE Testing_system_assignment_1;
-USE Testing_system_assignment_1;
- 
- CREATE TABLE Department (
-	DepartmentId		INT,
-    DepartmentName		VARCHAR(100)
+DROP DATABASE IF EXISTS Testing_System_Assignment_1;
+
+CREATE DATABASE Testing_System_Assignment_1;
+
+USE Testing_System_Assignment_1;
+
+DROP TABLE IF EXISTS `Department`;
+CREATE TABLE `Department` (
+	DepartmentId		TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    DepartmentName		VARCHAR(100) NOT NULL
 );
 
- CREATE TABLE  position (
-	PositionID		INT,
-    PositionName	VARCHAR(50)
+DROP TABLE IF EXISTS `Position`;
+ CREATE TABLE  `Position` (
+	PositionID		TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    PositionName	VARCHAR(50) NOT NULL
 );
 
-  CREATE TABLE account (
-	AccountID		INT,
-	Email			VARCHAR(100),
+DROP TABLE IF EXISTS `Account`;
+  CREATE TABLE `Account` (
+	AccountID		TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	Email			VARCHAR(100) NOT NULL, 
     Username 		VARCHAR(100),
-    FullName		VARCHAR(100),
-    DepartmentID  	INT,
-    PositionID		INT,
-    CreateDate  	DATETIME
+    FullName		VARCHAR(100) NOT NULL,
+    DepartmentID  	TINYINT UNSIGNED NOT NULL ,
+    PositionID		TINYINT UNSIGNED NOT NULL,
+    CreateDate  	DATETIME,
+    CONSTRAINT FOREIGN KEY (DepartmentID) REFERENCES `Department`(DepartmentID),
+    CONSTRAINT FOREIGN KEY (PositionID) REFERENCES `Position`(PositionID)
     );
     
-  CREATE TABLE  Groupf  (
-    GroupID			INT,
-    GroupName		VARCHAR(100),
-    CreatorID		INT,
-    CreateDate		Date
+DROP TABLE IF EXISTS  `Group`;
+  CREATE TABLE  `Group`  (
+    GroupID			TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT ,
+    GroupName		VARCHAR(100) NOT NULL,
+    CreatorID		SMALLINT UNSIGNED ,
+    CreateDate		DATETIME
     );
     
-  CREATE TABLE 	GroupAccount (
-    GroupID 		INT,
-    AccountID		INT
+DROP TABLE IF EXISTS `GroupAccount`;
+  CREATE TABLE 	`GroupAccount` (
+    GroupID 		TINYINT UNSIGNED PRIMARY KEY,
+    AccountID		TINYINT UNSIGNED NOT NULL,
+    JoinDate		DATETIME,
+    CONSTRAINT FOREIGN KEY (AccountID) REFERENCES `Account` (AccountID)
 );
     
-CREATE TABLE	TypeQuestion (
-	TypeID			INT,
-	TypeName		VARCHAR(100)
+DROP TABLE IF EXISTS `TypeQuestion`;
+CREATE TABLE	`TypeQuestion` (
+	TypeID			TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	TypeName		ENUM('Essay', 'Multiple-Choice') NOT NULL
 );
 
-CREATE TABLE	CategoryQuestion (
-	CategoryID		INT,
-    CategoryName	VARCHAR(100)
+DROP TABLE IF EXISTS `CategoryQuestion`;
+CREATE TABLE	`CategoryQuestion` (
+	CategoryID		TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+    CategoryName	VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE Question (
-	QuestionID			INT,
+DROP TABLE IF EXISTS `Question`;
+CREATE TABLE `Question` (
+	QuestionID			TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	Content				VARCHAR(1000) NOT NULL,
+	CategoryID			TINYINT UNSIGNED NOT NULL,
+	TypeID				TINYINT UNSIGNED NOT NULL,
+	CreatorID			INT NOT NULL,
+	CreateDate			DATETIME,
+    CONSTRAINT FOREIGN KEY  (CategoryID) REFERENCES `CategoryQuestion` (CategoryID),
+    CONSTRAINT FOREIGN KEY (TypeID) REFERENCES `TypeQuestion` (TypeID)
+);
+
+DROP TABLE IF EXISTS `Answer`;
+CREATE TABLE `Answer` (
+	AnswerID			TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
 	Content				VARCHAR(100),
-	CategoryID			INT,
-	TypeID				INT,
-	CreatorID			INT,
-	CreateDate			DATE
+	QuestionID			TINYINT UNSIGNED NOT NULL,
+	IsCorrect			ENUM('TRUE''FALSE'),
+    CONSTRAINT FOREIGN KEY (QuestionID) REFERENCES `Question` (QuestionID) 
 );
 
-CREATE TABLE Answer (
-	AnswerID			INT,
-	Content				VARCHAR(100),
-	QuestionID			INT,
-	isCorrect			VARCHAR(50)
+DROP TABLE IF EXISTS `Exam`;
+CREATE TABLE  `Exam` (
+	ExamID				TINYINT UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+	Codes				VARCHAR(250) NOT NULL,
+	Title				VARCHAR(250) NOT NULL, 
+	CategoryID			TINYINT UNSIGNED,
+	Duration			TINYINT UNSIGNED NOT NULL,
+	CreatorID			INT UNSIGNED,
+	CreateDate			DATETIME
 );
 
-CREATE TABLE  Exam (
-	ExamID				INT,
-	Code				INT,
-	Title				VARCHAR(100),
-	CategoryID			INT,
-	Duration			DATETIME,
-	CreatorID			INT,
-	CreateDate			DATE
-);
-
+DROP TABLE IF EXISTS `ExamQuestion`;
 CREATE TABLE  ExamQuestion (
-	ExamID				INT,
-    QuestionID			INT
+	ExamID				TINYINT UNSIGNED PRIMARY KEY NOT NULL,
+    QuestionID			TINYINT UNSIGNED,
+    CONSTRAINT FOREIGN KEY (ExamID) REFERENCES `Exam`(ExamID),
+    CONSTRAINT FOREIGN KEY (QuestionID) REFERENCES `Question`(QuestionID)
 );
+
+
+
+
 
 		
     
