@@ -1,4 +1,4 @@
-USE Testing_System_Assignment_2;
+USE Testing_System_Assignment_1;
 
 -- Q1 đã thêm
 
@@ -12,7 +12,10 @@ SELECT DepartmentID FROM Department WHERE DepartmentName = 'Sales';
 SELECT * FROM `Account` WHERE LENGTH(Fullname) = (SELECT MAX(LENGTH(Fullname)) FROM `Account`)ORDER BY AccountID;
 
 -- Q5 Lấy ra thông tin account có full name dài nhất và thuộc phòng ban có id = 3
-SELECT * FROM `Account` WHERE AccountID = 3 ORDER BY LENGTH(FullName) DESC LIMIT 1;
+WiTh CTE_DEP3 AS (SELECT * FROM `Account` WHERE DepartmentID = 3)
+SELECT * FROM `CTE_DEP3`
+WHERE LENGTH(Fullname) = (SELECT MAX(LENGTH(Fullname)) FROM `CTE_DEP3`)
+ORDER BY Fullname;
 
 -- Q6 Lấy ra tên group đã tạo trước ngày 20/12/2019
 SELECT GroupName, CreateDate FROM `Group` WHERE CreateDate < '2019-12-20';
